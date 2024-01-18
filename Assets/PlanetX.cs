@@ -315,7 +315,11 @@ public class PlanetX : MonoBehaviour {
 					}
 					for (int i = 0; i < noteInfos.Count; i++)
 					{
-						yield return new WaitForSeconds(5f);
+						for(int j = 0; j < 5; j++)
+						{
+							yield return "trycancel Cycling has been cancelled due to a cancel request.";
+							yield return new WaitForSeconds(1f);
+						}
 						rightNote.OnInteract();
 					}
 				}
@@ -328,6 +332,7 @@ public class PlanetX : MonoBehaviour {
 					}
 					for (int i = 0; i < sectors.Length; i++)
 					{
+						yield return "trycancel Cycling has been cancelled due to a cancel request.";
 						yield return new WaitForSeconds(1f);
 						upSector.OnInteract();
 					}
