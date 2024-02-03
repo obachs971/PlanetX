@@ -13,8 +13,10 @@ public class Puzzle
         GenerateNotes gen = new GenerateNotes();
         List<NoteObj> notes = gen.generateAllNotes(board);
         HashSet<int> possX = getPossXPos(notes);
+        bool noteXGen = false;
         if(possX.Count > 1)
         {
+            noteXGen = true;
             List<NoteObj> notesX = gen.generateAllXNotes(board);
             notesX.Shuffle();
             tryagain:
@@ -29,21 +31,40 @@ public class Puzzle
                 goto tryagain;
             }
         }
-        
         skip:
         if (possX.Count > 1)
             return null;
-        for(int i = 0; i < notes.Count; i++)
+        List<NoteObj> chosenNotes = new List<NoteObj>();
+        List<string> boards = new BoardConfig().getAllValidConfigs();
+        if(noteXGen)
         {
-            NoteObj note = notes[i];
-            notes.RemoveAt(i);
-            possX = getPossXPos(notes);
+            chosenNotes.Add(notes[notes.Count - 1]);
+            notes.RemoveAt(notes.Count - 1);
+            boards = getValidBoards(boards, chosenNotes[chosenNotes.Count - 1]);
+        }
+        possX = getPossXPos(boards);
+        while(possX.Count > 1)
+        {
+            int count = boards.Count + 0;
+            boards = getValidBoards(boards, notes[0]);
+            if(count != boards.Count)
+            {
+                chosenNotes.Insert(0, notes[0]);
+                possX = getPossXPos(boards);
+            }
+            notes.RemoveAt(0);
+        }
+        for (int i = 0; i < chosenNotes.Count; i++)
+        {
+            NoteObj note = chosenNotes[i];
+            chosenNotes.RemoveAt(i);
+            possX = getPossXPos(chosenNotes);
             if (possX.Count > 1)
-                notes.Insert(i, note);
+                chosenNotes.Insert(i, note);
             else
                 i--;
         }
-        return new PuzzleInfo(board, notes);
+        return new PuzzleInfo(board, chosenNotes);
     }
     private HashSet<int> getPossXPos(List<NoteObj> notes)
     {
@@ -58,21 +79,29 @@ public class Puzzle
             possX.Add(board.IndexOf("X"));
         return possX;
     }
+    private HashSet<int> getPossXPos(List<string> boards)
+    {
+        HashSet<int> possX = new HashSet<int>();
+        foreach (string board in boards)
+            possX.Add(board.IndexOf("X"));
+        return possX;
+    }
+    private List<string> getValidBoards(List<string> boards, NoteObj note)
+    {
+        List<string> newBoards = new List<string>();
+        foreach(string board in boards)
+        {
+            if (notePassed(note, board))
+                newBoards.Add(board);
+        }
+        return newBoards;
+    }
     private bool isValidBoard(List<NoteObj> notes, string board)
     {
         foreach(NoteObj note in notes)
         {
             if (!notePassed(note, board))
                 return false;
-        }
-        return true;
-    }
-    private bool isValidBoardTest(List<NoteObj> notes, string board)
-    {
-        foreach (NoteObj note in notes)
-        {
-            if (!notePassed(note, board))
-                Debug.LogFormat("{0}", note.getCode());
         }
         return true;
     }

@@ -22,9 +22,9 @@ public class GenerateNotes
 		surveyNotes.Shuffle();
 		otherNotes.Shuffle();
 		List<NoteObj> notes = new List<NoteObj>();
-		notes.AddRange(surveyNotes);
-		notes.AddRange(otherNotes);
 		notes.AddRange(factNotes);
+		notes.AddRange(otherNotes);
+		notes.AddRange(surveyNotes);
 		return notes;
 	}
 	public List<NoteObj> generateAllXNotes(string board)
