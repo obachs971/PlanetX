@@ -8,6 +8,7 @@ public class Puzzle
     private BoardInfo boardinfo = new BoardInfo();
     public PuzzleInfo generatePuzzle()
     {
+        regenerate:
         string board = new BoardConfig().getRandomBoardConfig();
         //Debug.LogFormat("BOARD: {0}", board);
         GenerateNotes gen = new GenerateNotes();
@@ -33,7 +34,7 @@ public class Puzzle
         }
         skip:
         if (possX.Count > 1)
-            return null;
+            goto regenerate;
         List<NoteObj> chosenNotes = new List<NoteObj>();
         List<string> boards = new BoardConfig().getAllValidConfigs();
         if(noteXGen)
