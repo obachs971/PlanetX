@@ -4457,8 +4457,14 @@ public class BoardConfig
 	{
 		return configs;
 	}
-	public string getRandomBoardConfig()
+	public string getRandomBoardConfig(int xPos)
 	{
-		return configs[Random.Range(0, configs.Count)];
+		configs.Shuffle();
+		foreach(string config in configs)
+		{
+			if (config[xPos] == 'X')
+				return config;
+		}
+		return null;
 	}
 }

@@ -8,8 +8,10 @@ public class Puzzle
     private BoardInfo boardinfo = new BoardInfo();
     public PuzzleInfo generatePuzzle()
     {
+        int xPos = UnityEngine.Random.Range(0, 12);
+        //int xPos = 11;
         regenerate:
-        string board = new BoardConfig().getRandomBoardConfig();
+        string board = new BoardConfig().getRandomBoardConfig(xPos);
         //Debug.LogFormat("BOARD: {0}", board);
         GenerateNotes gen = new GenerateNotes();
         List<NoteObj> notes = gen.generateAllNotes(board);
